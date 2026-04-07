@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foundry Nexus - Portfolio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+    :root {
+      --background: #f5f6f8;
+      --foreground: #121820;
+      --card: #ffffff;
+      --card-foreground: #121820;
+      --primary: #1b2333;
+      --muted: #eef0f4;
+      --muted-foreground: #686e78;
+      --accent: #e6a217;
+      --accent-light: rgba(230, 162, 23, 0.1);
+      --accent-border: rgba(230, 162, 23, 0.3);
+      --border: #dde0e7;
+      --radius: 0.75rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--background);
+      color: var(--foreground);
+    }
+
+    .portfolio-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 96px 32px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--foreground);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-header p {
+      font-size: 1.05rem;
+      color: var(--muted-foreground);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    /* Stack layer - category container */
+    .stack-layer {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 28px 28px 24px;
+      margin-bottom: 24px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stack-layer:hover {
+      border-color: var(--accent-border);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+    }
+
+    .stack-layer-title {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--foreground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .stack-layer-title::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .companies-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Bottom row: two side-by-side layers */
+    .stack-row-split {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .stack-row-split .stack-layer {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    /* Company card */
+    .company-card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 28px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 140px;
+      min-height: 72px;
+      flex: 1;
+      max-width: 280px;
+      text-decoration: none;
+    }
+
+    .company-card:hover {
+      border-color: var(--accent-border);
+      box-shadow: 0 10px 15px -3px rgba(230,162,23,0.08), 0 4px 6px -4px rgba(230,162,23,0.06);
+      transform: translateY(-2px);
+    }
+
+    .company-card img {
+      max-height: 36px;
+      max-width: 120px;
+      object-fit: contain;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .company-card:hover img {
+      opacity: 1;
+    }
+
+    /* Tooltip */
+    .company-card .tooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%) scale(0.95);
+      background: var(--card);
+      color: var(--foreground);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      max-width: 300px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 100;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .company-card .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--card);
+    }
+
+    .company-card .tooltip::before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--border);
+    }
+
+    .company-card:hover .tooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .stack-row-split {
+        flex-direction: column;
+      }
+      .companies-row {
+        flex-direction: column;
+        align-items: center;
+      }
+      .company-card {
+        max-width: 100%;
+        width: 100%;
+      }
+      .section-header h2 {
+        font-size: 1.75rem;
+      }
+      .portfolio-section {
+        padding: 64px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="portfolio-section">
+  <div class="section-header">
+    <h2>Portfolio Companies</h2>
+    <p>AI infrastructure stack — from data to vertical applications</p>
+  </div>
+
+  <!-- Vertical AI Agents -->
+  <div class="stack-layer">
+    <div class="stack-layer-title">Vertical AI Agents</div>
+    <div class="companies-row">
+      <a class="company-card" href="https://www.harvey.ai" target="_blank" rel="noopener">
+        <img src="https://github.com/harveyai.png" alt="Harvey">
+        <div class="tooltip">AI-powered platform for legal and professional services</div>
+      </a>
+      <a class="company-card" href="https://www.glean.com" target="_blank" rel="noopener">
+        <img src="https://github.com/gleanwork.png" alt="Glean">
+        <div class="tooltip">Enterprise work AI for search, assistant and agents across company knowledge</div>
+      </a>
+      <a class="company-card" href="https://sierra.ai" target="_blank" rel="noopener">
+        <img src="https://sierra.ai/icon.png" alt="Sierra">
+        <div class="tooltip">Conversational AI agents for elevated customer experiences</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Agent Orchestration -->
+  <div class="stack-layer">
+    <div class="stack-layer-title">Agent Orchestration</div>
+    <div class="companies-row">
+      <a class="company-card" href="https://www.langchain.com" target="_blank" rel="noopener">
+        <img src="https://github.com/langchain-ai.png" alt="LangChain">
+        <div class="tooltip">Open-source framework for building and orchestrating AI agents</div>
+      </a>
+      <a class="company-card" href="https://crewai.com" target="_blank" rel="noopener">
+        <img src="https://github.com/crewAIInc.png" alt="CrewAI">
+        <div class="tooltip">Multi-agent platform for collaborative AI crews tackling complex tasks</div>
+      </a>
+      <a class="company-card" href="https://www.llamaindex.ai" target="_blank" rel="noopener">
+        <img src="https://github.com/run-llama.png" alt="LlamaIndex">
+        <div class="tooltip">Agent framework for context-aware AI apps with retrieval and orchestration</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom split row -->
+  <div class="stack-row-split">
+    <!-- Model Training Infra -->
+    <div class="stack-layer">
+      <div class="stack-layer-title">Model Training Infra</div>
+      <div class="companies-row">
+        <a class="company-card" href="https://www.anyscale.com" target="_blank" rel="noopener">
+          <img src="https://github.com/anyscale.png" alt="Anyscale">
+          <div class="tooltip">Unified compute platform built on Ray for scaling AI workloads</div>
+        </a>
+        <a class="company-card" href="https://modal.com" target="_blank" rel="noopener">
+          <img src="https://github.com/modal-labs.png" alt="Modal">
+          <div class="tooltip">Serverless cloud for AI with instant GPU access</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Data Infra -->
+    <div class="stack-layer">
+      <div class="stack-layer-title">Data Infra</div>
+      <div class="companies-row">
+        <a class="company-card" href="https://www.pinecone.io" target="_blank" rel="noopener">
+          <img src="https://github.com/pinecone-io.png" alt="Pinecone">
+          <div class="tooltip">Purpose-built vector database for AI search, RAG and recommendations</div>
+        </a>
+        <a class="company-card" href="https://weaviate.io" target="_blank" rel="noopener">
+          <img src="https://github.com/weaviate.png" alt="Weaviate">
+          <div class="tooltip">Open-source AI-native vector database for scalable applications</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
